@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+import { Modal } from 'react-native';
+
 import { Button } from "../../components/Forms/Button";
-import { CategorySelect } from "../../components/Forms/CategorySelect";
+import { CategorySelectButton } from "../../components/Forms/CategorySelectButton";
 import { Input } from "../../components/Forms/Input";
 import { TransactionTypeButton } from "../../components/Forms/TransactionTypeButton";
+
+import {  CategorySelect } from '../CategorySelect';
+
 import { 
     Container,
     Header,
@@ -13,12 +18,28 @@ import {
 } from "./styles";
 
 export function Register(){
+    
+    const [transactionType, setTransationType ] = useState('');
+    const [ categoryModalOpen, SetCategoryModalOpen ] = useState(false); 
 
-    const [transactionType, setTransationType ] = useState('')
+    const [category, setCategory] = useState({
+        key: 'category',
+        name: 'Categoria',
+        
+    });
 
     function handleTransactionTypeSelect(type: 'up' | 'down' ){
         setTransationType(type);
     }
+
+    function handleOpenSelectionCategoryModal(){
+        SetCategoryModalOpen(true);
+    };
+    
+    function handleCloseSelectionCategoryModal(){
+        SetCategoryModalOpen(false);
+    };
+
     return(
         <Container>
             <Header>
@@ -52,7 +73,10 @@ export function Register(){
 
                     </TransactionsTypes>
                     
-                    <CategorySelect title="Categoria"/>
+                    <CategorySelectButton
+                       title={category.name}
+                       onPress={handleOpenSelectionCategoryModal}
+                       />
 
                 </Fields>
 
@@ -62,6 +86,14 @@ export function Register(){
                   title="Enviar"
                  />
             </Form>
+
+            <Modal visible={categoryModalOpen}>
+                <CategorySelect
+                    category={category}
+                    setCategory={setCategory}
+                    closeSelectCategory={handleCloseSelectionCategoryModal}
+                />
+            </Modal>
         </Container>
     )
 }

@@ -12,7 +12,7 @@ import {
 
 import theme from './src/global/styles/themes';
 
-import { CategorySelect } from './src/screens/CategorySelect';
+import { Register } from './src/screens/Register';
 
 
 
@@ -31,7 +31,7 @@ export default function App() {
 
     <ThemeProvider theme={theme}>
 
-      <CategorySelect />
+      <Register />
  
     </ThemeProvider>
    
