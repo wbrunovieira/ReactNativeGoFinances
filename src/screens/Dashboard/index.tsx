@@ -18,7 +18,8 @@ import {
     HighlightCards,
     Transations,
     Title,
-    TransationList
+    TransationList,
+    LogoutButton,
 
 } from './styles';
 
@@ -77,7 +78,9 @@ export function Dashboard() {
                            <UserName>Bruno</UserName>
                        </User>
                    </UserInfo>
-                   <Icons name="power"/>
+                   <LogoutButton onPress={() => {}}>
+                        <Icons name="power"/>
+                   </LogoutButton>
                  </UserWrapper>
                </Header>
                <HighlightCards>
