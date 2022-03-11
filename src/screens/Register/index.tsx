@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import {
      Modal,
     TouchableWithoutFeedback,
@@ -12,6 +12,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
 
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
+
+import uuid from 'react-native-uuid';
+import  { 
+          useNavigation,
+          NavigationProp,
+          ParamListBase,
+        } from '@react-navigation/native'
 
 import { Button } from "../../components/Forms/Button";
 import { CategorySelectButton } from "../../components/Forms/CategorySelectButton";
@@ -34,6 +41,8 @@ interface FormData {
     name: string;
     amount: string
 }
+
+
 
 const schema = Yup.object().shape({
     name:Yup
@@ -59,9 +68,12 @@ export function Register(){
         
     });
 
+    const { navigate }: NavigationProp<ParamListBase> = useNavigation();
+
     const {
         control,
         handleSubmit,
+        reset,
         formState: { errors }
      } = useForm({
          resolver: yupResolver(schema)
@@ -90,17 +102,35 @@ export function Register(){
             return Alert.alert('Selecione a categoria');
 
         }
-        const data = {
+        const newTrasaction = {
+            id: String(uuid.v4()),
             name: form.name,
             amount: form.amount,
-            transactionType,
-            category:category.key
+            type:transactionType,
+            category:category.key,
+            date: new Date()
         }
         
         try {
             
+            const data = await  AsyncStorage.getItem(dataKey);
+            const currentyData = data ? JSON.parse(data) : [];
 
-           await  AsyncStorage.setItem(dataKey,JSON.stringify(data));
+            const dataFormatted = [
+                ...currentyData,
+                newTrasaction
+            ]
+
+           await  AsyncStorage.setItem(dataKey,JSON.stringify(dataFormatted));
+           
+           
+           reset();
+           setTransationType('');
+           setCategory({
+               key:'category',
+               name:'Categoria'
+           });
+           navigate('Listagem');
 
         } catch (error) {
             console.log(error);
@@ -109,17 +139,8 @@ export function Register(){
         }
     }
 
-    useEffect(() => {
-        async function loadData() {
-         
-            const data = await AsyncStorage.getItem(dataKey);
-            console.log(JSON.parse(data!));
-        }
 
-        loadData();
-
-    }, []);
-
+ 
     return(
         <TouchableWithoutFeedback 
                     onPress={Keyboard.dismiss}
