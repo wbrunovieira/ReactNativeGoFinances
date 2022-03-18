@@ -55,7 +55,7 @@ const schema = Yup.object().shape({
     .required('o valor e obrigatorio')
 });
 
-const dataKey = '@gofinances:transactions';
+
 
 export function Register(){
     
@@ -79,7 +79,7 @@ export function Register(){
          resolver: yupResolver(schema)
       });
 
-    function handleTransactionTypeSelect(type: 'up' | 'down' ){
+    function handleTransactionTypeSelect(type: 'positive' | 'negative' ){
         setTransationType(type);
     }
 
@@ -112,6 +112,8 @@ export function Register(){
         }
         
         try {
+
+            const dataKey = '@gofinances:transactions';
             
             const data = await  AsyncStorage.getItem(dataKey);
             const currentyData = data ? JSON.parse(data) : [];
@@ -175,14 +177,14 @@ export function Register(){
                             <TransactionTypeButton 
                                 type="up"
                                 title="Income"
-                                onPress={() => handleTransactionTypeSelect('up')}
-                                isActive={transactionType === 'up'}
+                                onPress={() => handleTransactionTypeSelect('positive')}
+                                isActive={transactionType === 'positive'}
                             />
                             <TransactionTypeButton 
                                 type="down"
                                 title="Outcome"
-                                onPress={() => handleTransactionTypeSelect('down')}
-                                isActive={transactionType === 'down'}
+                                onPress={() => handleTransactionTypeSelect('negative')}
+                                isActive={transactionType === 'negative'}
                             />
 
                         </TransactionsTypes>
